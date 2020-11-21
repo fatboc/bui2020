@@ -2,8 +2,6 @@ DROP DATABASE IF EXISTS studia;
 CREATE DATABASE IF NOT EXISTS studia;
 USE studia;
 
-SELECT 'CREATING DATABASE STRUCTURE' as 'INFO';
-
 DROP TABLE IF EXISTS studenci,
                      prowadzacy,
                      kursy,
@@ -2625,3 +2623,9 @@ CREATE OR REPLACE VIEW biezace_zadania AS
     FROM zadania z
         INNER JOIN kursy k
         ON k.nr_kursu=z.nr_kursu AND z.termin>=NOW();
+        
+CREATE OR REPLACE VIEW kursy_prowadzacy AS
+    SELECT nr_kursu, nazwa, CONCAT(p.imie, ' ', p.nazwisko) as prowadzacy
+    FROM kursy k
+        INNER JOIN prowadzacy p
+        ON p.nr_prowadzacego=k.nr_gl_prowadzacego;
