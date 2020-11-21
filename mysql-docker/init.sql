@@ -28,7 +28,7 @@ CREATE TABLE prowadzacy (
 
 CREATE TABLE kursy (
     nr_kursu            INT         NOT NULL,
-    nazwa               VARCHAR(127) NOT NULL,
+    nazwa               VARCHAR(255) NOT NULL,
     nr_gl_prowadzacego  INT         NOT NULL,
     FOREIGN KEY (nr_gl_prowadzacego) REFERENCES prowadzacy (nr_prowadzacego) ON DELETE CASCADE,
     PRIMARY KEY (nr_kursu)
@@ -38,7 +38,7 @@ CREATE TABLE linki (
     nr_linku            INT         NOT NULL AUTO_INCREMENT,
     nr_kursu            INT         NOT NULL,
     data                DATE        NOT NULL,
-    linkk               VARCHAR(127) NOT NULL,
+    linkk               VARCHAR(255) NOT NULL,
     FOREIGN KEY (nr_kursu)      REFERENCES kursy    (nr_kursu)   ON DELETE CASCADE,
     PRIMARY KEY (nr_linku)
 );
@@ -60,8 +60,6 @@ CREATE TABLE kursy_studenci (
     FOREIGN KEY (nr_kursu)      REFERENCES kursy    (nr_kursu)   ON DELETE CASCADE,
     PRIMARY KEY (nr_indeksu,nr_kursu)
 );
-
-SET FOREIGN_KEY_CHECKS=1;
 
 insert into kursy (nr_kursu, nazwa, nr_gl_prowadzacego) values (1, 'Cyclopeltis semicordata (Sw.) J. Sm.', 29);
 insert into kursy (nr_kursu, nazwa, nr_gl_prowadzacego) values (2, 'Arabis suffrutescens S. Watson', 43);
@@ -2599,6 +2597,8 @@ insert into studenci (nr_indeksu, imie, nazwisko) values (417, 'Latrena', 'Killi
 insert into studenci (nr_indeksu, imie, nazwisko) values (418, 'Ricca', 'Bulbeck');
 insert into studenci (nr_indeksu, imie, nazwisko) values (419, 'Monti', 'Valenti');
 insert into studenci (nr_indeksu, imie, nazwisko) values (420, 'Federica', 'Ortes');
+
+SET FOREIGN_KEY_CHECKS=1;
 
 CREATE OR REPLACE VIEW prowadzacy_kursow AS
     SELECT nazwa, p.imie, p.nazwisko
