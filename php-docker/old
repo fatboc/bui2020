@@ -1,0 +1,61 @@
+FROM debian
+RUN apt-get update && \
+    apt-get install -y \
+    git \
+    mercurial \
+    curl \
+    nginx \
+    default-mysql-client \
+    php-fpm \
+    php-curl \
+    php-cli \
+    php-gd \
+    php-intl \
+    php-mysql \
+    php-mbstring \
+    php-pgsql \
+    php-xsl \
+    php-dev \
+    libmcrypt-dev \
+    php-pear && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+WORKDIR /app
+
+# Install composer && global asset plugin (Yii 2.0 requirement)
+ENV COMPOSER_HOME /root/.composer
+ENV PATH /root/.composer/vendor/bin:$PATH
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+   # /usr/local/bin/composer global require "foxy/foxy:^1.0.0"
+ADD config.json /root/.composer/config.json
+
+# Install application template and packages
+# Yii 2.0 application and its extensions can be used directly from the image or serve as local cache
+RUN echo "extension=mbstring" | tee -a /etc/php/7.3/cli/php.ini
+RUN /usr/local/bin/composer create-project --prefer-dist \
+    yiisoft/yii2-app-basic: \
+    /app
+
+# Configure nginx
+ADD default /etc/nginx/sites-available/default
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf && \
+    echo "cgi.fix_pathinfo = 0;" >> /etc/php/7.3/fpm/php.ini && \
+    sed -i.bak 's/variables_order = "GPCS"/variables_order = "EGPCS"/' /etc/php/7.3/fpm/php.ini && \
+    sed -i.bak '/;catch_workers_output = yes/ccatch_workers_output = yes' /etc/php/7.3/fpm/pool.d/www.conf && \
+    sed -i.bak 's/log_errors_max_len = 1024/log_errors_max_len = 65536/' /etc/php/7.3/fpm/php.ini
+# forward request and error logs to docker log collector
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
+# /!\ DEVELOPMENT ONLY SETTINGS /!\
+# Running PHP-FPM as root, required for volumes mounted from host
+RUN sed -i.bak 's/user = www-data/user = root/' /etc/php/7.3/fpm/pool.d/www.conf && \
+    sed -i.bak 's/group = www-data/group = root/' /etc/php/7.3/fpm/pool.d/www.conf && \
+    sed -i.bak 's/--fpm-config /-R --fpm-config /' /etc/init.d/php7.3-fpm
+# /!\ DEVELOPMENT ONLY SETTINGS /!\
+
+ADD run.sh /root/run.sh
+RUN chmod 700 /root/run.sh
+
+COPY basic /app
+CMD ["/root/run.sh"]
+EXPOSE 80
