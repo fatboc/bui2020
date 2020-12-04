@@ -30,7 +30,6 @@ spec:
     spec:
       containers:
       - name: php
-        image: php-docker
-        imagePullPolicy: Never
+        image: fatusia/bui2020:php
         ports:
         - containerPort: 80
