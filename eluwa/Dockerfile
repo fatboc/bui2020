@@ -3,7 +3,7 @@ WORKDIR /app
 COPY basic /app
 EXPOSE 80
 RUN docker-php-ext-install sockets
-RUN docker-php-ext-install bcmath
-RUN composer install
+RUN comopser self-update
+RUN composer require jonahgeorge/jaeger-client-php
 RUN chmod -R 777 web/assets
 RUN /etc/init.d/apache2 start
