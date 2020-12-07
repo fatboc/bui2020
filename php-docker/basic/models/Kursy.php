@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\db\ActiveRecord;
+use yii\OpenTracing;
 
 class Kursy extends ActiveRecord
 {
