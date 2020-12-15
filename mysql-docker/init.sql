@@ -4,6 +4,7 @@ USE studia;
 
 DROP TABLE IF EXISTS studenci,
                      prowadzacy,
+                     uzytkownicy,
                      kursy,
                      linki,
                      kursy_studenci;
@@ -23,6 +24,19 @@ CREATE TABLE prowadzacy (
     nazwisko            VARCHAR(16) NOT NULL,
     PRIMARY KEY (nr_prowadzacego)
 );
+
+CREATE TABLE uzytkownicy (
+    nr_uzytkownika          INT         NOT NULL,
+    nazwa               VARCHAR(16) NOT NULL,
+    haslo               VARCHAR(128) NOT NULL,
+    czy_admin           BOOLEAN NOT NULL,
+    nr_indeksu         INT,
+    nr_prowadzacego     INT,
+    FOREIGN KEY (nr_prowadzacego) REFERENCES prowadzacy (nr_prowadzacego) ON DELETE CASCADE,
+    FOREIGN KEY (nr_indeksu) REFERENCES studenci (nr_indeksu) ON DELETE CASCADE,
+    PRIMARY KEY (nr_uzytkownika)
+);
+
 
 CREATE TABLE kursy (
     nr_kursu            INT         NOT NULL,

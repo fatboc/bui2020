@@ -107,11 +107,11 @@ class SiteController extends Controller
     public function actionContact()
     {
         $model = new ContactForm();
-        //if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-        //    Yii::$app->session->setFlash('contactFormSubmitted');
+        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
+            Yii::$app->session->setFlash('contactFormSubmitted');
 
-        //    return $this->refresh();
-        //}
+            return $this->refresh();
+        }
         return $this->render('contact', [
             'model' => $model,
         ]);
@@ -132,12 +132,7 @@ class SiteController extends Controller
         return $this->render('say', ['message' => $message]);
     }
 
-    public function actionEluwa($message = 'Hello')
-    {
-        return $this->render('eluwa', ['message' => $message]);
-    }
-
-   public function actionEntry()
+    public function actionEntry()
     {
         $model = new EntryForm();
 

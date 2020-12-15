@@ -53,7 +53,6 @@ $config = [
         */
     ],
     'params' => $params,
-
 ];
 
 

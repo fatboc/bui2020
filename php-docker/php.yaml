@@ -33,6 +33,6 @@ spec:
       containers:
       - name: php
         image: fatusia/bui2020:php
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
