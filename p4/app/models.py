@@ -9,7 +9,7 @@ class Uzytkownik(UserMixin, db.Model):
 
     # Ensures table will be named in plural and not in singular
     # as is the name of the model
-    __tablename__ = 'studenci'
+    __tablename__ = 'uzytkownicy'
 
     nr_uzytkownika = db.Column(db.Integer, primary_key=True)
     nazwa = db.Column(db.String(16), index=True, unique=True)
@@ -48,32 +48,16 @@ def load_user(user_id):
     return Uzytkownik.query.get(int(nr_uzytkownika))
 
 
-class Studenci(db.Model):
+class Student(db.Model):
 
-    __tablename__ = 'departments'
+    __tablename__ = 'studenci'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), unique=True)
-    description = db.Column(db.String(200))
+    imie = db.Column(db.String(60), unique=True)
+    nazwisko = db.Column(db.String(200))
     employees = db.relationship('Employee', backref='department',
                                 lazy='dynamic')
 
     def __repr__(self):
-        return '<Department: {}>'.format(self.name)
+        return '<Student: {}>'.format(self.name)
 
-
-class Role(db.Model):
-    """
-    Create a Role table
-    """
-
-    __tablename__ = 'roles'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), unique=True)
-    description = db.Column(db.String(200))
-    employees = db.relationship('Employee', backref='role',
-                                lazy='dynamic')
-
-    def __repr__(self):
-        return '<Role: {}>'.format(self.name)

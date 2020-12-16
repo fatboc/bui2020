@@ -11,10 +11,20 @@ DROP TABLE IF EXISTS studenci,
 
 SET FOREIGN_KEY_CHECKS = 0;
 
+CREATE TABLE uzytkownicy (
+    nr_uzytkownika          INT         NOT NULL AUTO_INCREMENT,
+    nazwa               VARCHAR(16) NOT NULL,
+    haslo               VARCHAR(128) NOT NULL,
+    czy_admin           BOOLEAN NOT NULL,
+    PRIMARY KEY (nr_uzytkownika)
+);
+
 CREATE TABLE studenci (
     nr_indeksu          INT         NOT NULL,
     imie                VARCHAR(16) NOT NULL,
     nazwisko            VARCHAR(16) NOT NULL,
+    nr_uzytkownika      INT,
+    FOREIGN KEY (nr_uzytkownika) REFERENCES uzytkownicy (nr_uzytkownika) ON DELETE CASCADE, 
     PRIMARY KEY (nr_indeksu)
 );
 
@@ -22,19 +32,9 @@ CREATE TABLE prowadzacy (
     nr_prowadzacego       INT         NOT NULL,
     imie                VARCHAR(16) NOT NULL,
     nazwisko            VARCHAR(16) NOT NULL,
+    nr_uzytkownika      INT,
+    FOREIGN KEY (nr_uzytkownika) REFERENCES uzytkownicy (nr_uzytkownika) ON DELETE CASCADE, 
     PRIMARY KEY (nr_prowadzacego)
-);
-
-CREATE TABLE uzytkownicy (
-    nr_uzytkownika          INT         NOT NULL,
-    nazwa               VARCHAR(16) NOT NULL,
-    haslo               VARCHAR(128) NOT NULL,
-    czy_admin           BOOLEAN NOT NULL,
-    nr_indeksu         INT,
-    nr_prowadzacego     INT,
-    FOREIGN KEY (nr_prowadzacego) REFERENCES prowadzacy (nr_prowadzacego) ON DELETE CASCADE,
-    FOREIGN KEY (nr_indeksu) REFERENCES studenci (nr_indeksu) ON DELETE CASCADE,
-    PRIMARY KEY (nr_uzytkownika)
 );
 
 

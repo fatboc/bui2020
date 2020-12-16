@@ -17,8 +17,8 @@ def register():
     """
     form = RegistrationForm()
     if form.validate_on_submit():
-        student = Student(imie=form.imie.data,
-                            nazwisko=form.nazwisko.data)
+        uzytkownik = uzytkownik(nazwa=form.imie.data,
+                            haslo=form.nazwisko.data)
 
         # add employee to the database
         db.session.add(student)
