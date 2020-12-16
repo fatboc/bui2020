@@ -14,8 +14,6 @@ class Uzytkownik(UserMixin, db.Model):
     nr_uzytkownika = db.Column(db.Integer, primary_key=True)
     nazwa = db.Column(db.String(16), index=True, unique=True)
     haslo = db.Column(db.String(128))
-    nr_studenta = db.Column(db.Integer, db.ForeignKey('studenci.nr_indeksu'))
-    nr_prowadzacego = db.Column(db.Integer, db.ForeignKey('prowadzacy.nr_prowadzacego'))
     czy_admin = db.Column(db.Boolean, default=False)
 
     @property
@@ -52,12 +50,44 @@ class Student(db.Model):
 
     __tablename__ = 'studenci'
 
-    id = db.Column(db.Integer, primary_key=True)
-    imie = db.Column(db.String(60), unique=True)
-    nazwisko = db.Column(db.String(200))
-    employees = db.relationship('Employee', backref='department',
-                                lazy='dynamic')
+    nr_indeksu = db.Column(db.Integer, primary_key=True)
+    imie = db.Column(db.String(16))
+    nazwisko = db.Column(db.String(16))
+    nr_uzytkownika = db.Column(db.Integer, db.ForeignKey('uzytkownicy.nr_uzytkowika'), unique=True)
 
     def __repr__(self):
-        return '<Student: {}>'.format(self.name)
+        return '<Student: {}>'.format(self.imie . self.nazwisko)
 
+class Prowadzacy(db.Model):
+
+    __tablename__ = 'prowadzacy'
+
+    nr_prowadzacego = db.Column(db.Integer, primary_key=True)
+    imie = db.Column(db.String(16))
+    nazwisko = db.Column(db.String(16))
+    nr_uzytkownika = db.Column(db.Integer, db.ForeignKey('uzytkownicy.nr_uzytkowika'), unique=True)
+
+    def __repr__(self):
+        return '<Prowadzacy: {}>'.format(self.imie . self.nazwisko)
+
+class Kurs(db.Model):
+
+    __tablename__ = 'kursy_prowadzacy'
+
+    nr_kursu = db.Column(db.Integer, primary_key=True)
+    nazwa = db.Column(db.String(255))
+    prowadzacy = db.Column(db.String(33))
+
+    def __repr__(self):
+        return '<Kurs: {}>'.format(self.nazwa)
+
+class Link(db.Model):
+    __tablename__ = 'nowe_linki'
+
+    nr_linku = db.Column(db.Integer, primary_key=True)
+    data = db.Column(db.DateTime)
+    nazwa = db.Column(db.String(255))
+    linkk = db.Column(db.String(255))
+
+    def __repr__(self):
+        return '<Link: {}>'.format(self.linkk)
