@@ -1,8 +1,8 @@
 <!-- app/templates/base.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-    <title>{{ title }} | Project Dream Team</title>
+    <title>{{ title }}</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
@@ -13,13 +13,13 @@
 <!-- Modify nav bar menu -->
 <ul class="nav navbar-nav navbar-right">
     {% if current_user.is_authenticated %}
-      <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
-      <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
-      <li><a><i class="fa fa-user"></i>  Hi, {{ current_user.username }}!</a></li>
+      <li><a href="{{ url_for('home.dashboard') }}">Widok główny</a></li>
+      <li><a href="{{ url_for('auth.logout') }}">Wyloguj</a></li>
+      <li><a><i class="fa fa-user"></i> {{ current_user.username }}</a></li>
     {% else %}
-      <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
-      <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-      <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+      <li><a href="{{ url_for('home.homepage') }}">BUI2020</a></li>
+      <li><a href="{{ url_for('auth.register') }}">Zarejestruj</a></li>
+      <li><a href="{{ url_for('auth.login') }}">Zaloguj</a></li>
     {% endif %}
 </ul>
 <div class="wrapper">
@@ -29,14 +29,14 @@
     </div>
 <!-- Modify footer menu -->
 <ul class="list-inline">
-    <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
+    <li><a href="{{ url_for('home.homepage') }}">BUI2020</a></li>
     <li class="footer-menu-divider">⋅</li>
     {% if current_user.is_authenticated %}
-      <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+      <li><a href="{{ url_for('auth.logout') }}">Wyloguj</a></li>
     {% else %}
-      <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+      <li><a href="{{ url_for('auth.register') }}">Zarejestruj</a></li>
       <li class="footer-menu-divider">⋅</li>
-      <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+      <li><a href="{{ url_for('auth.login') }}">Zaloguj</a></li>
     {% endif %}
 </ul>
 </body>

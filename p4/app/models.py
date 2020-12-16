@@ -53,7 +53,7 @@ class Student(db.Model):
     nr_indeksu = db.Column(db.Integer, primary_key=True)
     imie = db.Column(db.String(16))
     nazwisko = db.Column(db.String(16))
-    nr_uzytkownika = db.Column(db.Integer, db.ForeignKey('uzytkownicy.nr_uzytkowika'), unique=True)
+    nr_uzytkownika = db.Column(db.Integer, db.ForeignKey('uzytkownicy.nr_uzytkownika'), unique=True)
 
     def __repr__(self):
         return '<Student: {}>'.format(self.imie . self.nazwisko)
@@ -65,7 +65,7 @@ class Prowadzacy(db.Model):
     nr_prowadzacego = db.Column(db.Integer, primary_key=True)
     imie = db.Column(db.String(16))
     nazwisko = db.Column(db.String(16))
-    nr_uzytkownika = db.Column(db.Integer, db.ForeignKey('uzytkownicy.nr_uzytkowika'), unique=True)
+    nr_uzytkownika = db.Column(db.Integer, db.ForeignKey('uzytkownicy.nr_uzytkownika'), unique=True)
 
     def __repr__(self):
         return '<Prowadzacy: {}>'.format(self.imie . self.nazwisko)
