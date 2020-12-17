@@ -11,4 +11,4 @@ ENV FLASK_APP app.py
 
 WORKDIR /bui2020
 
-CMD FLASK_CONFIG=development FLASK_APP=run.py flask run --host=0.0.0.0 --port=5000
+CMD FLASK_CONFIG=production FLASK_APP=run.py flask run --host=0.0.0.0 --port=5000

@@ -12,11 +12,11 @@ DROP TABLE IF EXISTS studenci,
 SET FOREIGN_KEY_CHECKS = 0;
 
 CREATE TABLE uzytkownicy (
-    nr_uzytkownika          INT         NOT NULL AUTO_INCREMENT,
+    id                  INT         NOT NULL AUTO_INCREMENT,
     nazwa               VARCHAR(16) NOT NULL,
     haslo               VARCHAR(128) NOT NULL,
     czy_admin           BOOLEAN NOT NULL,
-    PRIMARY KEY (nr_uzytkownika)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE studenci (
@@ -24,7 +24,7 @@ CREATE TABLE studenci (
     imie                VARCHAR(16) NOT NULL,
     nazwisko            VARCHAR(16) NOT NULL,
     nr_uzytkownika      INT,
-    FOREIGN KEY (nr_uzytkownika) REFERENCES uzytkownicy (nr_uzytkownika) ON DELETE CASCADE, 
+    FOREIGN KEY (nr_uzytkownika) REFERENCES uzytkownicy (id) ON DELETE CASCADE, 
     PRIMARY KEY (nr_indeksu)
 );
 
@@ -33,7 +33,7 @@ CREATE TABLE prowadzacy (
     imie                VARCHAR(16) NOT NULL,
     nazwisko            VARCHAR(16) NOT NULL,
     nr_uzytkownika      INT,
-    FOREIGN KEY (nr_uzytkownika) REFERENCES uzytkownicy (nr_uzytkownika) ON DELETE CASCADE, 
+    FOREIGN KEY (nr_uzytkownika) REFERENCES uzytkownicy (id) ON DELETE CASCADE, 
     PRIMARY KEY (nr_prowadzacego)
 );
 
@@ -59,8 +59,10 @@ CREATE TABLE zadania (
     nr_zadania          INT         NOT NULL AUTO_INCREMENT,
     nr_kursu            INT         NOT NULL,
     termin              DATE        NOT NULL,
-    typ                 ENUM ('kolokwium', 'projekt', 'raport') NOT NULL,
-    opis                VARCHAR(255) NOT NULL,
+    typ                 VARCHAR(32) NOT NULL,
+    opis                VARCHAR(255),
+    nr_uzytkownika      INT         NOT NULL,
+    FOREIGN KEY (nr_uzytkownika) REFERENCES uzytkownicy (id) ON DELETE CASCADE, 
     FOREIGN KEY (nr_kursu)      REFERENCES kursy    (nr_kursu)   ON DELETE CASCADE,
     PRIMARY KEY (nr_zadania)
 );
@@ -2627,7 +2629,7 @@ CREATE OR REPLACE VIEW zapisani_studenci AS
         ON k.nr_kursu=q.nr_kursu;
 
 CREATE OR REPLACE VIEW nowe_linki AS
-    SELECT data, k.nazwa, linkk 
+    SELECT nr_linku, data, k.nazwa, linkk 
     FROM linki l
         INNER JOIN kursy k
         ON k.nr_kursu=l.nr_kursu AND l.data>=NOW() AND l.data<NOW() + INTERVAL 1 DAY;
@@ -2643,3 +2645,22 @@ CREATE OR REPLACE VIEW kursy_prowadzacy AS
     FROM kursy k
         INNER JOIN prowadzacy p
         ON p.nr_prowadzacego=k.nr_gl_prowadzacego;
+
+CREATE OR REPLACE VIEW uzytkownicy_studenci AS
+    SELECT u.id, nr_indeksu
+    FROM studenci s
+        INNER JOIN uzytkownicy u
+        ON u.id=s.nr_uzytkownika;
+
+CREATE OR REPLACE VIEW uzytkownicy_prowadzacy AS
+    SELECT u.id, nr_prowadzacego
+    FROM prowadzacy p
+        INNER JOIN uzytkownicy u
+        ON u.id=p.nr_uzytkownika;
+
+CREATE OR REPLACE VIEW zadania_pelne AS
+    SELECT nr_zadania, k.nazwa, termin, typ, opis, nr_uzytkownika
+    FROM zadania z
+        INNER JOIN kursy k
+        ON z.nr_kursu=k.nr_kursu;
+
