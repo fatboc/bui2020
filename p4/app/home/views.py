@@ -59,7 +59,7 @@ def pokaz_linki():
 @login_required
 def pokaz_zadania():
 
-    zadania = Zadanie.query.all()
+    zadania = Zadanie.query.filter_by(nr_uzytkownika=current_user.id)
 
     return render_template('home/zadania/zadania.html',
                            zadania=zadania, title="Zadania")
@@ -79,19 +79,15 @@ def dodaj_zadanie():
                           opis=form.opis.data,
                           nr_uzytkownika=current_user.id)
 
-        try:
-            # add department to the database
-            db.session.add(zadanie)
-            db.session.commit()
-            flash('Zadanie dodane pomyślnie.')
-        except:
-            # in case department name already exists
-            flash('Coś nie pykło :(')
+        #try:
+        db.session.add(zadanie)
+        db.session.commit()
+        flash('Zadanie dodane pomyślnie.')
+        #except:
+        flash('Coś nie pykło :(')
 
-        # redirect to departments page
         return redirect(url_for('home.pokaz_zadania'))
 
-    # load department template
     return render_template('home/zadania/zadanie.html', action="Add",
                            dodaj_zadanie=dodaj_zadanie, form=form,
                            title="Dodaj zadanie")
@@ -127,7 +123,7 @@ def edytuj_zadanie(id):
 
 @home.route('/zadania/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete_department(id):
+def usun_zadanie(id):
 
     zadanie = Zadanie.query.get_or_404(id)
     db.session.delete(zadanie)

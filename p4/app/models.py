@@ -114,7 +114,7 @@ class Zadanie(db.Model):
     __tablename__ = 'zadania'
 
     nr_zadania = db.Column(db.Integer, primary_key=True)
-    nr_kursu = db.Column(db.Integer, db.ForeignKey('kursy.nr_kursy'))
+    nr_kursu = db.Column(db.Integer, db.ForeignKey('kursy_prowadzacy.nr_kursu'))
     termin = db.Column(db.Date)
     typ = db.Column(db.String(32))
     opis = db.Column(db.String(255))
