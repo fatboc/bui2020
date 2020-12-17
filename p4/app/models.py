@@ -111,10 +111,10 @@ class UzytkownikProwadzacy(db.Model):
         return '<Numerki: {}>'.format(self.nr_uzytkownika + self.nr_prowadzacego)
 
 class Zadanie(db.Model):
-    __tablename__ = 'zadania_pelne'
+    __tablename__ = 'zadania'
 
     nr_zadania = db.Column(db.Integer, primary_key=True)
-    nazwa_kursu = db.Column(db.String(255))
+    nr_kursu = db.Column(db.Integer, db.ForeignKey('kursy.nr_kursy'))
     termin = db.Column(db.Date)
     typ = db.Column(db.String(32))
     opis = db.Column(db.String(255))

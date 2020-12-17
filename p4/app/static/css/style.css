@@ -1,7 +1,8 @@
 /* app/static/css/style.css */
 
 body, html {
-    width: 100%;
+    margin: 0px 10px;
+    width: 95%;
     height: 100%;
     background-color: #fffafb;
 }
@@ -120,4 +121,20 @@ p.copyright {
   height: auto !important;
   height: 100%;
   margin: 0 auto -4em;
+}
+.outer {
+    display: table;
+    position: absolute;
+    height: 70%;
+    width: 100%;
+}
+
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.inner {
+    margin-left: auto;
+    margin-right: auto;
 }

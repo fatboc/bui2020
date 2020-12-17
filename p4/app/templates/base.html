@@ -18,7 +18,8 @@
       <li><a href="{{ url_for('home.pokaz_prowadzacych') }}">Prowadzacy</a></li>
       <li><a href="{{ url_for('home.pokaz_studentow') }}">Studenci</a></li>
       <li><a href="{{ url_for('home.pokaz_linki') }}">Linki</a></li>
-      <li><a href="#">Zadania</a></li>
+      <li><a href="{{ url_for('home.pokaz_zadania') }}">Zadania</a></li>
+      <li><a href="#">Szukaj</a></li>
       <li><a href="{{ url_for('auth.logout') }}">Wyloguj</a></li>
       <li><a><i class="fa fa-user"></i> {{ current_user.username }}</a></li>
     {% else %}
