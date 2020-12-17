@@ -22,7 +22,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - name: frontend-port
-              containerPort: 8000
+              containerPort: 5000
               protocol: TCP
 ---
 apiVersion: v1
@@ -34,7 +34,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 8000
+  - port: 5000
     protocol: TCP
   selector:
     app: python

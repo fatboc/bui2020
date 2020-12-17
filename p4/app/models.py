@@ -4,6 +4,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, login_manager
+from .tracer import tracer
 
 class Uzytkownik(UserMixin, db.Model):
 
@@ -25,16 +26,12 @@ class Uzytkownik(UserMixin, db.Model):
 
     @password.setter
     def password(self, password):
-        """
-        Set password to a hashed password
-        """
-        self.haslo = generate_password_hash(password)
+        with tracer.start_span('set_password') as span:
+            self.haslo = generate_password_hash(password)
 
     def verify_password(self, password):
-        """
-        Check if hashed password matches actual password
-        """
-        return check_password_hash(self.haslo, password)
+        with tracer.start_span('verify_password') as span:
+            return check_password_hash(self.haslo, password)
 
     def __repr__(self):
         return '<Uzytkownik: {}>'.format(self.username)
@@ -43,7 +40,8 @@ class Uzytkownik(UserMixin, db.Model):
 # Set up user_loader
 @login_manager.user_loader
 def load_user(user_id):
-    return Uzytkownik.query.get(int(user_id))
+    with tracer.start_span('load_user') as span:
+        return Uzytkownik.query.get(int(user_id))
 
 
 class Student(db.Model):

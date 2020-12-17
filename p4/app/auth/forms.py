@@ -17,7 +17,7 @@ class RegistrationForm(FlaskForm):
                                         EqualTo('potwierdz_haslo')
                                         ])
     potwierdz_haslo = PasswordField('Potwierdź hasło')
-    rodzaj = RadioField('Rodzaj użytkownika', choices=['Student', 'Prowadzacy'], validators=[DataRequired()])
+    rodzaj = RadioField('Rodzaj użytkownika', choices=['Student'], validators=[DataRequired()])
     nr_dokumentu = StringField('Numer Dokumentu', validators=[DataRequired()])
     submit = SubmitField('Dalej')
 
