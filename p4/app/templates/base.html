@@ -1,6 +1,6 @@
 <!-- app/templates/base.html -->
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <title>{{ title }}</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -14,6 +14,10 @@
 <ul class="nav navbar-nav navbar-right">
     {% if current_user.is_authenticated %}
       <li><a href="{{ url_for('home.dashboard') }}">Widok główny</a></li>
+      <li><a href="#">Kursy</a></li>
+      <li><a href="#">Prowadzacy</a></li>
+      <li><a href="#">Linki</a></li>
+      <li><a href="#">Zadania</a></li>
       <li><a href="{{ url_for('auth.logout') }}">Wyloguj</a></li>
       <li><a><i class="fa fa-user"></i> {{ current_user.username }}</a></li>
     {% else %}

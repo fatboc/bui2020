@@ -4,7 +4,7 @@ class Config(object):
     """
     Common configurations
     """
-
+    TEMPLATES_AUTO_RELOAD = True
     # Put any configurations here that are common across all environments
 
 

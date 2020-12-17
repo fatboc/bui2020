@@ -11,7 +11,7 @@ class Uzytkownik(UserMixin, db.Model):
     # as is the name of the model
     __tablename__ = 'uzytkownicy'
 
-    nr_uzytkownika = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     nazwa = db.Column(db.String(16), index=True, unique=True)
     haslo = db.Column(db.String(128))
     czy_admin = db.Column(db.Boolean, default=False)
@@ -28,13 +28,13 @@ class Uzytkownik(UserMixin, db.Model):
         """
         Set password to a hashed password
         """
-        self.password_hash = generate_password_hash(password)
+        self.haslo = generate_password_hash(password)
 
     def verify_password(self, password):
         """
         Check if hashed password matches actual password
         """
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.haslo, password)
 
     def __repr__(self):
         return '<Uzytkownik: {}>'.format(self.username)
@@ -43,7 +43,7 @@ class Uzytkownik(UserMixin, db.Model):
 # Set up user_loader
 @login_manager.user_loader
 def load_user(user_id):
-    return Uzytkownik.query.get(int(nr_uzytkownika))
+    return Uzytkownik.query.get(int(user_id))
 
 
 class Student(db.Model):
@@ -110,3 +110,15 @@ class UzytkownikProwadzacy(db.Model):
     def __repr__(self):
         return '<Numerki: {}>'.format(self.nr_uzytkownika + self.nr_prowadzacego)
 
+class Zadanie(db.Model):
+    __tablename__ = 'zadania'
+
+    nr_zadania = db.Column(db.Integer, primary_key=True)
+    nr_kursu = db.Column(db.Integer, db.ForeignKey('kursy.nr_kursu'))
+    termin = db.Column(db.Date)
+    typ = db.Column(db.String(32))
+    opis = db.Column(db.String(255))
+    nr_uzytkownika = db.Column(db.Integer, db.ForeignKey('uzytkownicy.id'))
+
+    def __repr__(self):
+        return '<ID: {}>'.format(self.nr_zadania)

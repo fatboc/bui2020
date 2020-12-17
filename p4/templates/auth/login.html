@@ -1,12 +1,16 @@
-<!-- app/templates/auth/register.html -->
+<!-- app/templates/auth/login.html -->
 
+{% import "bootstrap/utils.html" as utils %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
-{% block title %}Zarejestruj{% endblock %}
+{% block title %}Login{% endblock %}
 {% block body %}
 <div class="content-section">
+  <br/>
+  {{ utils.flashed_messages() }}
+  <br/>
   <div class="center">
-    <h1>Zarejetruj się, aby uzyskać dostęp do zawartości</h1>
+    <h1>Login to your account</h1>
     <br/>
     {{ wtf.quick_form(form) }}
   </div>

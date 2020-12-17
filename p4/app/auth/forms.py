@@ -1,7 +1,7 @@
 # app/auth/forms.py
 
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, SubmitField, ValidationError
+from wtforms import PasswordField, StringField, RadioField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, EqualTo
 
 from ..models import Student
@@ -14,7 +14,7 @@ class RegistrationForm(FlaskForm):
     nazwa = StringField('Nazwa', validators=[DataRequired()])
     haslo = PasswordField('Hasło', validators=[
                                         DataRequired(),
-                                        EqualTo('confirm_password')
+                                        EqualTo('potwierdz_haslo')
                                         ])
     potwierdz_haslo = PasswordField('Potwierdź hasło')
     rodzaj = RadioField('Rodzaj użytkownika', choices=['Student', 'Prowadzacy'], validators=[DataRequired()])

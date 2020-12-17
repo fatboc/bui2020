@@ -1,13 +1,12 @@
 # app/auth/views.py
 
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, request, render_template, url_for
 from flask_login import login_required, login_user, logout_user
 
 from . import auth
-#from forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm
 from .. import db
-from ..models import Uzytkownik
-
+from ..models import Uzytkownik, Student, Prowadzacy
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -17,25 +16,23 @@ def register():
     """
     form = RegistrationForm()
     if form.validate_on_submit():
-        uzytkownik = uzytkownik(nazwa=form.nazwa.data,
-                            haslo=form.haslo.data)
-
+        uzytkownik = Uzytkownik(nazwa=form.nazwa.data,
+                            password=form.haslo.data)
+        nowy_numer = Uzytkownik.query.count()+1
         rodzaj = form.rodzaj.data
+
+        db.session.add(uzytkownik)
+        db.session.commit()
+
         if rodzaj=='Student':
-            dokument = IDFormStudent()
-            if form.validate_on_submit():
-                db.session.add(uzytkownik)
-                student = Student.query.filter_by(nr_indeksu=dokument.nr_indeksu.data).update(dict(nr_uzytkownika=uzytkownik.nr_uzytkownika))
+            student = Student.query.filter_by(nr_indeksu=form.nr_dokumentu.data).update(dict(nr_uzytkownika=nowy_numer))
 
         elif rodzaj=='Prowadzacy':
-            dokument = IDFormProwadzacy()
-            if form.validate_on_submit():
-                db.session.add(uzytkownik)
-                prowadzacy = prowadzacy.query.filter_by(nr_prowadzacego=dokument.nr_indeksu.data).update(dict(nr_uzytkownika=uzytkownik.nr_uzytkownika))
+            prowadzacy = prowadzacy.query.filter_by(nr_prowadzacego=form.nr_dokumentu.data).update(dict(nr_uzytkownika=nowy_numer))
 
+        db.session.commit()
 
         # add employee to the database
-        db.session.commit()
         flash('Rejestracja przebiegła pomyślnie.')
 
         # redirect to the login page
