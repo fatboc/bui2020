@@ -18,7 +18,7 @@ def register():
     if form.validate_on_submit():
         uzytkownik = Uzytkownik(nazwa=form.nazwa.data,
                             password=form.haslo.data)
-        nowy_numer = Uzytkownik.query.count()+1
+        nowy_numer = Uzytkownik.query.count()+
         rodzaj = form.rodzaj.data
 
         db.session.add(uzytkownik)

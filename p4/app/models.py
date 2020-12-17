@@ -122,3 +122,14 @@ class Zadanie(db.Model):
 
     def __repr__(self):
         return '<ID: {}>'.format(self.nr_zadania)
+
+class KursyStudenta(db.Model):
+    __tablename__ = 'zapisani_studenci'
+
+    nazwa = db.Column(db.String(255))
+    nr_indeksu = db.Column(db.Integer, primary_key=True)
+    imie = db.Column(db.String(255))
+    nazwisko = db.Column(db.String(255))
+
+    def __repr__(self):
+        return '<Nazwa: {}>'.format(self.nazwa)

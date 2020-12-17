@@ -16,7 +16,7 @@
             <table class="table table-striped table-bordered">
               <thead>
                 <tr>
-                  <th width="15%"> Link </th>
+                  <th width="20%"> Link </th>
                   <th width="40%"> Nazwa </th>
                   <th width="80%"> Data </th>
                 </tr>
@@ -24,7 +24,7 @@
               <tbody>
               {% for link in linki %}
                 <tr>
-                  <td> {{ link.linkk }} </td>
+                    <td><a href="{{ link.linkk }}">{{ link.linkk }}</a> </td>
                   <td> {{ link.nazwa }} </td>
                   <td> {{ link.data }} </td>
                 </tr>

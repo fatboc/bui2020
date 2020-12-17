@@ -22,6 +22,8 @@ def dashboard():
     """
     Render the dashboard template on the /dashboard route
     """
+    student = Student.query.filter_by(nr_uzytkownika = current_user.id).first()
+    kursy_studenta = KursyStudenta.query.filter_by(nr_indeksu=student.nr_indeksu)
     return render_template('home/dashboard.html', title="Widok główny")
 
 @home.route('/studenci')
