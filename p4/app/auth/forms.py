@@ -21,13 +21,28 @@ class RegistrationForm(FlaskForm):
     nr_dokumentu = StringField('Numer Dokumentu', validators=[DataRequired()])
     submit = SubmitField('Zarejestruj')
 
-    def validate_id(self, field):
-        if Student.query.filter_by(nr_indeksu=field.data).first():
-            raise ValidationError('ID is already in use.')
-
     def validate_username(self, field):
         if Uzytkownik.query.filter_by(nazwa=field.data).first():
-            raise ValidationError('Username is already in use.')
+            raise ValidationError('Podana nazwa jest już zajęta.')
+
+class IDFormStudent(FlaskForm):
+    nr_indeksu = StringField('Numer Indeksu', validators=[DataRequired()])
+
+    def validate_id(self, field):
+        if UzytkownikStudent.query.filter_by(nr_indeksu=field.data).first():
+            raise ValidationError('Podany indeks jest już zarejestrowany.')
+        elif Student.query.filter_by(nr_indeksu=field.data) == None:
+            raise ValidationError('Podany indeks nie istnieje')
+
+class IDFormProwadzacy(FlaskForm):
+    nr_prowadzacego = StringField('Numer Dokumentu', validators=[DataRequired()])
+
+    def validate_id(self, field):
+        if UzytkownikProwadzacy.query.filter_by(nr_prowadzacego=field.data).first():
+            raise ValidationError('Podany numer jest już zarejestrowany.')
+        elif Prowadzacy.query.filter_by(nr_prowadzacego=field.data) == None:
+            raise ValidationError('Podany numer nie istnieje')
+
 
 class LoginForm(FlaskForm):
     """

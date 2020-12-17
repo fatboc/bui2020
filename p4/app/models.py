@@ -68,7 +68,7 @@ class Prowadzacy(db.Model):
     nr_uzytkownika = db.Column(db.Integer, db.ForeignKey('uzytkownicy.nr_uzytkownika'), unique=True)
 
     def __repr__(self):
-        return '<Prowadzacy: {}>'.format(self.imie . self.nazwisko)
+        return '<Prowadzacy: {}>'.format(self.imie + self.nazwisko)
 
 class Kurs(db.Model):
 
@@ -91,3 +91,22 @@ class Link(db.Model):
 
     def __repr__(self):
         return '<Link: {}>'.format(self.linkk)
+
+class UzytkownikStudent(db.Model):
+    __tablename__ = 'uzytkownicy_studenci'
+
+    nr_uzytkownika = db.Column(db.Integer, primary_key=True)
+    nr_indeksu = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Numerki: {}>'.format(self.nr_uzytkownika + self.nr_indeksu)
+
+class UzytkownikProwadzacy(db.Model):
+    __tablename__ = 'uzytkownicy_prowadzacy'
+
+    nr_uzytkownika = db.Column(db.Integer, primary_key=True)
+    nr_prowadzacego = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Numerki: {}>'.format(self.nr_uzytkownika + self.nr_prowadzacego)
+
