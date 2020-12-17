@@ -17,13 +17,26 @@ def register():
     """
     form = RegistrationForm()
     if form.validate_on_submit():
-        uzytkownik = uzytkownik(nazwa=form.imie.data,
-                            haslo=form.nazwisko.data)
+        uzytkownik = uzytkownik(nazwa=form.nazwa.data,
+                            haslo=form.haslo.data)
+
+        rodzaj = form.rodzaj.data
+        if rodzaj=='Student':
+            dokument = IDFormStudent()
+            if form.validate_on_submit():
+                db.session.add(uzytkownik)
+                student = Student.query.filter_by(nr_indeksu=dokument.nr_indeksu.data).update(dict(nr_uzytkownika=uzytkownik.nr_uzytkownika))
+
+        elif rodzaj=='Prowadzacy':
+            dokument = IDFormProwadzacy()
+            if form.validate_on_submit():
+                db.session.add(uzytkownik)
+                prowadzacy = prowadzacy.query.filter_by(nr_prowadzacego=dokument.nr_indeksu.data).update(dict(nr_uzytkownika=uzytkownik.nr_uzytkownika))
+
 
         # add employee to the database
-        db.session.add(student)
         db.session.commit()
-        flash('You have successfully registered! You may now login.')
+        flash('Rejestracja przebiegła pomyślnie.')
 
         # redirect to the login page
         return redirect(url_for('auth.login'))
@@ -43,18 +56,18 @@ def login():
 
         # check whether employee exists in the database and whether
         # the password entered matches the password in the database
-        student = Student.query.filter_by(nazwisko=form.nazwisko.data).first()
-        if student is not None and student.verify_password(
-                form.imie.data):
+        uzytkownik = Uzytkownik.query.filter_by(nazwa=form.nazwa.data).first()
+        if uzytkownik is not None and uzytkownik.verify_password(
+                form.haslo.data):
             # log employee in
-            login_user(student)
+            login_user(uzytkownik)
 
             # redirect to the dashboard page after login
             return redirect(url_for('home.dashboard'))
 
         # when login details are incorrect
         else:
-            flash('Invalid email or password.')
+            flash('Błędna nazwa użytkownika lub hasło.')
 
     # load login template
     return render_template('auth/login.html', form=form, title='Login')
@@ -68,7 +81,7 @@ def logout():
     Log an employee out through the logout link
     """
     logout_user()
-    flash('You have successfully been logged out.')
+    flash('Wylogowano.')
 
     # redirect to the login page
     return redirect(url_for('auth.login'))

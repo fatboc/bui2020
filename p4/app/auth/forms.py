@@ -19,7 +19,7 @@ class RegistrationForm(FlaskForm):
     potwierdz_haslo = PasswordField('Potwierdź hasło')
     rodzaj = RadioField('Rodzaj użytkownika', choices=['Student', 'Prowadzacy'], validators=[DataRequired()])
     nr_dokumentu = StringField('Numer Dokumentu', validators=[DataRequired()])
-    submit = SubmitField('Zarejestruj')
+    submit = SubmitField('Dalej')
 
     def validate_username(self, field):
         if Uzytkownik.query.filter_by(nazwa=field.data).first():
@@ -27,6 +27,7 @@ class RegistrationForm(FlaskForm):
 
 class IDFormStudent(FlaskForm):
     nr_indeksu = StringField('Numer Indeksu', validators=[DataRequired()])
+    submit = SubmitField('Zarejestruj')
 
     def validate_id(self, field):
         if UzytkownikStudent.query.filter_by(nr_indeksu=field.data).first():
@@ -36,6 +37,7 @@ class IDFormStudent(FlaskForm):
 
 class IDFormProwadzacy(FlaskForm):
     nr_prowadzacego = StringField('Numer Dokumentu', validators=[DataRequired()])
+    submit = SubmitField('Zarejestruj')
 
     def validate_id(self, field):
         if UzytkownikProwadzacy.query.filter_by(nr_prowadzacego=field.data).first():
