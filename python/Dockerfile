@@ -5,7 +5,7 @@ RUN apk add --no-cache py3-pip python3 python3-dev mariadb-dev build-base && \
     flask-sqlalchemy mysqlclient flask-bootstrap flask-login flask-migrate \
     flask-wtf
 
-COPY . /bui2020
+COPY app bui2020
 
 ENV FLASK_APP app.py
 
