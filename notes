@@ -1,7 +1,0 @@
-Narzędzia:
-Docker
-kubectl
-kubeadm
-kind
-
-W k8sie są przynajmniej 2 pody, żeby uniknąć przerw w działaniu aplikacji.
