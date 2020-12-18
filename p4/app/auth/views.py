@@ -1,5 +1,5 @@
 from flask import flash, redirect, request, render_template, url_for
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 
 from . import auth
 from .forms import LoginForm, RegistrationForm
@@ -13,15 +13,13 @@ def register():
         span.set_tag('span.kind', 'server')
         span.set_tag('module', 'auth')
         span.set_tag('action', 'register')
-        span.set_tag('tier', 'frontend')
         form = RegistrationForm()
         span.log_kv({'event':'init', 'object':'Form'})
         v = form.validate_on_submit()
         span.log_kv({'event':'validate', 'value' : v})
 
         if v:
-            with tracer.start_active_span('db_add', child_of=span):
-                span.set_tag('tier', 'backend')
+            with tracer.start_active_span('db_add', child_of=span) as cspan:
                 uzytkownik = Uzytkownik(nazwa=form.nazwa.data,
                                     password=form.haslo.data)
                 span.log_kv({'event': 'object.create', 'object': 'Uzytkownik', 'value': uzytkownik.nazwa})
@@ -36,22 +34,19 @@ def register():
                 span.log_kv({'event': 'db.commit', 'object': 'Uzytkownik', 'value': uzytkownik.nazwa})
         
                 if rodzaj=='Student':
-                    student = Student.query.filter_by(nr_indeksu=form.nr_dokumentu.data)
-                    span.log_kv({'event': 'db.query', 'object': 'Student', 'value': student.nr_indeksu})
-                    student.update(dict(nr_uzytkownika=nowy_numer))
-                    span.log_kv({'event': 'db.update', 'object': 'Student', 'value': student.nr_indeksu, 'value': nowy_numer})
+                    student = Student.query.filter_by(nr_indeksu=form.nr_dokumentu.data).update(dict(nr_uzytkownika=nowy_numer))
+                    span.log_kv({'event': 'db.query', 'object': 'Student'})
+                    span.log_kv({'event': 'db.update', 'object': 'Student', 'value': nowy_numer})
         
                 db.session.commit()
-                span.log_kv({'event': 'db.commit', 'object': 'Student', 'value': student.nr_indeksu})
+                span.log_kv({'event': 'db.commit', 'object': 'Student'})
     
             
             flash('Rejestracja przebiegła pomyślnie.')
             span.log_kv({'event': 'user.print'})
     
-            span.log_kv({'event': 'redirect', 'route': 'auth.login'})
             return redirect(url_for('auth.login'))
     
-        span.log_kv({'event': 'form.render', 'route': 'auth.register'})
         return render_template('auth/register.html', form=form, title='Register')
 
 
@@ -61,27 +56,25 @@ def login():
         span.set_tag('span.kind', 'server')
         span.set_tag('module', 'auth')
         span.set_tag('action', 'login')
-        span.set_tag('tier', 'frontend')
         form = LoginForm()
         span.log_kv({'event': 'init', 'object':'Form'})
-        if form.validate_on_submit():
+        v = form.validate_on_submit()
+        span.log_kv({'event':'validate', 'value' : v})
+        if v:
             with tracer.start_active_span('db_check', child_of=span):
-                span.set_tag('tier', 'backend')
                 uzytkownik = Uzytkownik.query.filter_by(nazwa=form.nazwa.data).first()
-                span.log_kv({'event': 'init', 'object':'Form'})
-                if uzytkownik is not None and uzytkownik.verify_password(
-                        form.haslo.data):
-                    # log employee in
+                span.log_kv({'event': 'db.query', 'object':'Uzytkownik'})
+                u = uzytkownik is not None and uzytkownik.verify_password()
+                span.log_kv({'event': 'session.authenticate', 'value': u})
+                if u:
                     login_user(uzytkownik)
-
-                    # redirect to the dashboard page after login
+                    span.log_kv({'event': 'session.start', 'value': uzytkownik.nazwa})
                     return redirect(url_for('home.dashboard'))
 
-                # when login details are incorrect
                 else:
                     flash('Błędna nazwa użytkownika lub hasło.')
+                    span.log_kv({'event': 'user.print'})
 
-        # load login template
         return render_template('auth/login.html', form=form, title='Login')
 
 
@@ -89,8 +82,14 @@ def login():
 @login_required
 def logout():
     with tracer.start_span('logout') as span:
+        span.set_tag('span.kind', 'server')
+        span.set_tag('module', 'auth')
+        span.set_tag('action', 'login')
+        nazwa = current_user.nazwa
         logout_user()
+        span.log_kv({'event': 'session.end'})
         flash('Wylogowano.')
+        span.log_kv({'event': 'user.print'})
 
         # redirect to the login page
         return redirect(url_for('auth.login'))

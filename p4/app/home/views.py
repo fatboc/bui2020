@@ -12,9 +12,6 @@ from .forms import ZadanieForm
 
 @home.route('/')
 def homepage():
-    """
-    Render the homepage template on the / route
-    """
     with tracer.start_span('homepage') as span:
         return render_template('home/index.html', title="Bezpieczne Usługi internetowe")
 
