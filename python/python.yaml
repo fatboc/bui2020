@@ -32,7 +32,7 @@ metadata:
   labels:
     app: python
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - port: 5000
     protocol: TCP

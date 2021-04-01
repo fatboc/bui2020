@@ -1,9 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-kubectl delete -f jaeger/jaeger.yaml
-kubectl delete -f mysql/mysql.yaml
-kubectl delete -f python/python.yaml
+apply () {
+    for i in $@
+    do
+        if [ $(whoami)=="fatoumata" ] ; then
+            docker build -t bui2020:$i $i
+            docker push fatusia/bui2020:$i
+        fi
 
-kubectl create -f jaeger/jaeger.yaml
-kubectl create -f mysql/mysql.yaml
-kubectl create -f python/python.yaml
+        kubectl apply -f $i/$i.yaml
+    done
+}
+
+kubectl get deployments | grep jaeger || kubectl apply -f https://raw.githubusercontent.com/jaegertracing/jaeger-kubernetes/master/all-in-one/jaeger-all-in-one-template.yml
+
+apply mysql python

@@ -8,8 +8,6 @@ from .tracer import tracer
 
 class Uzytkownik(UserMixin, db.Model):
 
-    # Ensures table will be named in plural and not in singular
-    # as is the name of the model
     __tablename__ = 'uzytkownicy'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -19,9 +17,6 @@ class Uzytkownik(UserMixin, db.Model):
 
     @property
     def password(self):
-        """
-        Prevent pasword from being accessed
-        """
         raise AttributeError('password is not a readable attribute.')
 
     @password.setter

@@ -10,6 +10,9 @@ spec:
     app: mysql
   ports:
   - port: 3306
+    targetPort: 3306
+    nodePort: 30306
+    name: mysql-port
     protocol: TCP
 ---
 apiVersion: apps/v1
@@ -31,7 +34,8 @@ spec:
           imagePullPolicy: Always
           ports:
           - containerPort: 3306
-            name: mysql
+            name: mysql-port
+            protocol: TCP
           volumeMounts:
           - name: mysql-persistent-storage
             mountPath: /var/lib/mysql
@@ -39,3 +43,14 @@ spec:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
