@@ -3,7 +3,7 @@
 apply () {
     for i in $@
     do
-        if [ $(whoami)=="fatoumata" ] ; then
+        if [ $(whoami)=="byq" ] ; then
             docker build -t bui2020:$i $i
             docker push fatusia/bui2020:$i
         fi
